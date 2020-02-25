@@ -3,7 +3,6 @@ defmodule MyAppWeb.UserController do
 
   alias MyApp.Auth
   alias MyApp.Auth.User
-  alias MyAppWeb.ChangesetView
 
   action_fallback MyAppWeb.FallbackController
 
@@ -13,11 +12,18 @@ defmodule MyAppWeb.UserController do
   end
 
   def create(conn, %{"user" => user_params}) do
-    with {:ok, %User{} = user} <- Auth.create_user(user_params) do
-      conn
-      |> put_status(:created)
-      |> put_resp_header("location", Routes.user_path(conn, :show, user))
-      |> render("show.json", user: user)
+    
+    case Auth.create_user(user_params) do
+      {:ok, %User{} = user} -> 
+        conn
+        |> put_status(:created)
+        |> put_resp_header("location", Routes.user_path(conn, :show, user))
+        |> render("show.json", user: user)
+
+      {:error, %Ecto.Changeset{} = changeset} ->
+        conn
+        |> put_view(MyAppWeb.ChangesetView)
+        |> render("error.json", changeset: changeset)
     end
   end
 

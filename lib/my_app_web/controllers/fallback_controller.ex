@@ -13,10 +13,10 @@ defmodule MyAppWeb.FallbackController do
     |> render(:"404")
   end
 
-  def call(conn, {:error, %Ecto.Changeset{}}) do
-    conn
-    #|> put_status(:"update_failed")
-    |> put_view(MyAppWeb.ChangesetView)
-    |> render(:"422")
-  end
+  # def call(conn, {:error, %Ecto.Changeset{}}) do
+  #   conn
+  #   #|> put_status(:"update_failed")
+  #   |> put_view(MyAppWeb.ChangesetView)
+  #   |> render(:"error")
+  # end
 end

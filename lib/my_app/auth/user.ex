@@ -21,6 +21,8 @@ defmodule MyApp.Auth.User do
     user
     |> cast(attrs, [:email, :is_active, :password])
     |> validate_required([:email, :is_active, :password])
+    |> validate_format(:email, ~r/^[\w.!#$%&’*+\-\/=?\^`{|}~]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*$/i)
+    |> validate_length(:password, min: 6, max: 20)
     |> unique_constraint(:email)
     |> put_password_hash()
   end
