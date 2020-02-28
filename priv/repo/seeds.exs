@@ -9,3 +9,9 @@
 #
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
+
+alias MyApp.Partner
+
+for category <- ~w(Popular Sponsored) do
+    Partner.create_category!(category)
+end

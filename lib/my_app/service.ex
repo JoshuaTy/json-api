@@ -24,18 +24,7 @@ defmodule MyApp.Service do
     |> Repo.all()
   end
 
-  defp list_items_with_shop_query do
-    from i in Item,
-    join: s in assoc(i, :shop),
-    where: i.shop_id == s.id,
-    preload: [:shop]
-    # select: %{
-    #  # id: s.id,
-    #   name: s.name
-    # 
-
-  end
-
+  
   @doc """
   Gets a single item.
 
@@ -50,7 +39,23 @@ defmodule MyApp.Service do
       ** (Ecto.NoResultsError)
 
   """
-  def get_item!(id), do: Repo.get!(Item, id)
+  def get_item!(id) do
+    list_items_with_shop_query()
+    |>Repo.get!(Item, id)
+  end
+
+  defp list_items_with_shop_query do
+    from i in Item,
+    join: s in assoc(i, :shop),
+    where: i.shop_id == s.id,
+    preload: [:shop]
+    # select: %{
+    #  # id: s.id,
+    #   name: s.name
+    # 
+
+  end
+
 
   @doc """
   Creates a item.

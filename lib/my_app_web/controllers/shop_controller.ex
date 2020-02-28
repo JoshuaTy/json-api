@@ -5,6 +5,10 @@ defmodule MyAppWeb.ShopController do
     alias MyApp.Partner.Shop
   
     action_fallback MyAppWeb.FallbackController
+    
+        defp load_categories(conn, _) do
+            assign(conn, :categories, Partner.list_categories())
+        end
 
       def index(conn, _params) do
           shops = Partner.list_shops()
@@ -34,5 +38,19 @@ defmodule MyAppWeb.ShopController do
           render(conn, "show.json", shop: shop)
       end
       
+def update(conn, %{"id" => id, "shop" => shop_params}) do
+        shop = Partner.get_shop!(id)
+
+        case Partner.update_shop(shop, shop_params) do 
+        
+            {:ok, %Shop{} = shop} ->
+                render(conn, "show.json", shop: shop)
+
+            {:error, %Ecto.Changeset{} = changeset} ->
+                conn
+                |> put_view(MyAppWeb.ChangesetView)
+                |> render("error.json", changeset: changeset)
+        end
+    end
   
   end

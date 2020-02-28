@@ -7,7 +7,7 @@ defmodule MyApp.Partner do
   alias MyApp.Repo
 
   alias MyApp.Partner.Shop
-
+  alias MyApp.Partner.Category
   @doc """
   Returns the list of shops.
 
@@ -18,7 +18,23 @@ defmodule MyApp.Partner do
 
   """
   def list_shops do
-    Repo.all(Shop)
+    # list_shop_with_items_query()
+    list_shop_with_category_query()
+    |> Repo.all()
+    |> Repo.preload([:items])
+  end
+
+  # def list_shop_with_items_query do
+  #   Repo.preload(Shop, [:items])
+  # end
+
+  def list_shop_with_category_query do
+    query = from s in Shop,
+    join: c in assoc(s, :category),
+    where: s.category_id == c.id,
+    preload: [:category]
+
+    IO.inspect(query)
   end
 
   @doc """
@@ -101,4 +117,14 @@ defmodule MyApp.Partner do
   def change_shop(%Shop{} = shop) do
     Shop.changeset(shop, %{})
   end
+
+  def create_category!(name) do
+    Repo.insert!(%Category{name: name}, on_conflict: :nothing)
+  end
+
+  def list_categories() do
+    Category
+    |> Repo.all()
+  end
+
 end

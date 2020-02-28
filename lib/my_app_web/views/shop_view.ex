@@ -3,7 +3,7 @@ defmodule MyAppWeb.ShopView do
     alias MyAppWeb.ShopView
 
     def render("index.json", %{shops: shops}) do
-        %{data: render_many(shops, ShopView, "shop.json")}
+        %{data: render_many(shops, ShopView, "shop_with_category.json")}
     end
 
     def render("show.json", %{shop: shop}) do
@@ -15,7 +15,17 @@ defmodule MyAppWeb.ShopView do
             id: shop.id,
             name: shop.name,
             address: shop.address,
-            #item: render_many(shop.items, MyAppWeb.ItemView, "item.json")
+            #items: render_many(shop.items, MyAppWeb.ItemView, "item.json"),
+            category_id: shop.category_id
+        }
+    end
+
+    def render("shop_with_category.json", %{shop: shop}) do
+        %{
+            id: shop.id,
+            name: shop.name,
+            address: shop.address,
+            category: render_one(shop.category, MyAppWeb.CategoryView, "category.json")
         }
     end
 
